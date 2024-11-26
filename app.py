@@ -7,8 +7,8 @@ import os
 app = Flask(__name__)
 
 # تحميل النموذج
-if not os.path.exists("end3.keras"):
-    return jsonify({"error": "النموذج غير موجود!"}), 500
+# if not os.path.exists("end3.keras"):
+#     return jsonify({"error": "النموذج غير موجود!"}), 500
 model = tf.keras.models.load_model("end3.keras")
 
 # كود المعالجة السابقه مفروض يتعدل على حسب أخر نموذج (معلوووومه مهههههمه) لازم تتعدل
