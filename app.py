@@ -109,14 +109,6 @@ def check_file_integrity(file_path, expected_size):
             print(f"File size mismatch: expected {expected_size} bytes, but got {actual_size} bytes.")
             return False
         
-        # تحقق من صلاحية الأذونات
-        permissions = get_file_permissions(file_path)
-        if permissions is None:
-            print("Error checking file permissions.")
-            return False
-        else:
-            print(f"File permissions: {oct(permissions)}")
-        
         # تحقق من صحة النموذج باستخدام TensorFlow
         try:
             model = tf.keras.models.load_model(file_path)
@@ -134,15 +126,23 @@ def check_file_integrity(file_path, expected_size):
 file_path = '/app/end3.keras'
 expected_size = 369520000  # الحجم المتوقع بالبايت (في حالة الحجم الفعلي من GitHub)
 
+result = check_model_file(model_path)
+print("tensorflow say: ",result)
+get_file_info(model_path)
+
+# تحقق من صلاحية الأذونات
+permissions = get_file_permissions(file_path)
+if permissions is None:
+    print("Error checking file permissions.")
+    return False
+else:
+    print(f"File permissions: {oct(permissions)}")
+
 # التحقق من تكامل الملف
 if check_file_integrity(file_path, expected_size):
     print("The file is valid and accessible.")
 else:
     print("The file is invalid or inaccessible.")
-
-result = check_model_file(model_path)
-print("tensorflow say: ",result)
-get_file_info(model_path)
 
 
 
