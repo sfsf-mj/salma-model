@@ -39,7 +39,6 @@ else:
 # 3. طباعة إصدار TensorFlow
 print("ChatGPT ask: TensorFlow version:", tf.__version__)
 
-
 # import os
 print("ChatGPT say File exists:", os.path.exists("/app/end3.keras"))
 
@@ -47,14 +46,6 @@ print("ChatGPT say File exists:", os.path.exists("/app/end3.keras"))
 # if not os.path.exists("end3.keras"):
 #     return jsonify({"error": "النموذج غير موجود!"}), 500
 # model = tf.keras.models.load_model("end3.keras")
-
-categories = ['Apple___healthy', 'Apple___Black_rot']
-
-# كود المعالجة السابقه مفروض يتعدل على حسب أخر نموذج (معلوووومه مهههههمه) لازم تتعدل
-def preprocess_image(image):
-    image = image.resize((256, 256))  # تغيير حجم الصورة
-    image_array = np.array(image) / 255.0  # تطبيع القيم
-    return image_array.reshape(1, 256, 256, 3)  # إعادة تشكيل البيانات
     
 def check_model_file(file_path):
     """
@@ -73,9 +64,34 @@ def check_model_file(file_path):
     except (OSError, ValueError) as e:
         # التعامل مع الأخطاء التي تشير إلى ملف تالف أو غير مكتمل
         return {"status": "invalid", "message": f"The model file is corrupted or incomplete: {str(e)}"}
-        
+
+def get_file_info(file_path):
+    """
+    تطبع اسم الملف، نوعه، وحجمه.
+    """
+    if os.path.exists(file_path):
+        file_name = os.path.basename(file_path)
+        file_type = os.path.splitext(file_name)[1]  # امتداد الملف
+        file_size = os.path.getsize(file_path)  # الحجم بالبايت
+        print(f"اسم الملف: {file_name}")
+        print(f"نوع الملف: {file_type or 'غير محدد'}")  # عرض 'غير محدد' إذا لم يكن هناك امتداد
+        print(f"حجم الملف: {file_size} بايت")
+    else:
+        print(f"✘ الملف غير موجود: {file_path}")
+
 result = check_model_file(model_path)
 print("tensorflow say: ",result)
+get_file_info(model_path)
+
+
+
+categories = ['Apple___healthy', 'Apple___Black_rot']
+
+# كود المعالجة السابقه مفروض يتعدل على حسب أخر نموذج (معلوووومه مهههههمه) لازم تتعدل
+def preprocess_image(image):
+    image = image.resize((256, 256))  # تغيير حجم الصورة
+    image_array = np.array(image) / 255.0  # تطبيع القيم
+    return image_array.reshape(1, 256, 256, 3)  # إعادة تشكيل البيانات
 
 @app.route('/predict', methods=['POST'])
 def predict():
