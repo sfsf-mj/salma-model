@@ -3,16 +3,50 @@ import tensorflow as tf
 from PIL import Image
 import numpy as np
 import os
+import zipfile
 
 app = Flask(__name__)
 
-import os
-print("ChatGPT say File exists:", os.path.exists("end3.keras"))
+# تعريف مسار الملف
+model_path = os.path.join(os.path.dirname(__file__), "end3.keras")
+
+# التحقق من وجود الملف
+if os.path.exists(model_path):
+    print("ChatGPT ask: ✔ File exists:", model_path)
+
+    # 1. التحقق مما إذا كان الملف تالفًا أو غير مكتمل
+    try:
+        # محاولة فتح الملف كملف مضغوط
+        with zipfile.ZipFile(model_path, 'r') as zip_ref:
+            print("ChatGPT ask: ✔ The file is a valid .keras zip file.")
+            # عرض محتويات الملف للتحقق من البنية
+            print("ChatGPT ask: Contents:", zip_ref.namelist())
+    except zipfile.BadZipFile:
+        print("ChatGPT ask: ✘ The file is corrupted or not a valid zip file.")
+    except Exception as e:
+        print("ChatGPT ask: ✘ An error occurred while checking the file:", str(e))
+    
+    # 2. التحقق من نوع الملف الصحيح
+    try:
+        # محاولة تحميل النموذج باستخدام TensorFlow
+        model = tf.keras.models.load_model(model_path)
+        print("ChatGPT ask: ✔ The file is a valid TensorFlow model.")
+    except Exception as e:
+        print("ChatGPT ask: ✘ The file is not a valid TensorFlow model:", str(e))
+else:
+    print("ChatGPT ask: ✘ File not found! Please check the file path.")
+
+# 3. طباعة إصدار TensorFlow
+print("ChatGPT ask: TensorFlow version:", tf.__version__)
+
+
+# import os
+# print("ChatGPT say File exists:", os.path.exists("end3.keras"))
 
 # تحميل النموذج
 # if not os.path.exists("end3.keras"):
 #     return jsonify({"error": "النموذج غير موجود!"}), 500
-model = tf.keras.models.load_model("end3.keras")
+# model = tf.keras.models.load_model("end3.keras")
 
 categories = ['Apple___healthy', 'Apple___Black_rot']
 
