@@ -41,7 +41,7 @@ print("ChatGPT ask: TensorFlow version:", tf.__version__)
 
 
 # import os
-# print("ChatGPT say File exists:", os.path.exists("end3.keras"))
+print("ChatGPT say File exists:", os.path.exists("end3.keras"))
 
 # تحميل النموذج
 # if not os.path.exists("end3.keras"):
@@ -55,6 +55,27 @@ def preprocess_image(image):
     image = image.resize((256, 256))  # تغيير حجم الصورة
     image_array = np.array(image) / 255.0  # تطبيع القيم
     return image_array.reshape(1, 256, 256, 3)  # إعادة تشكيل البيانات
+    
+def check_model_file(file_path):
+    """
+    التحقق مما إذا كان ملف النموذج .keras صالحًا أو تالفًا.
+    
+    Args:
+        file_path (str): المسار إلى ملف النموذج.
+    
+    Returns:
+        dict: يحتوي على حالة التحقق ورسالة.
+    """
+    try:
+        # محاولة تحميل النموذج
+        tf.keras.models.load_model(file_path)
+        return {"status": "valid", "message": "The model file is valid."}
+    except (OSError, ValueError) as e:
+        # التعامل مع الأخطاء التي تشير إلى ملف تالف أو غير مكتمل
+        return {"status": "invalid", "message": f"The model file is corrupted or incomplete: {str(e)}"}
+        
+result = check_model_file(model_path)
+print("tensorflow say: ",result)
 
 @app.route('/predict', methods=['POST'])
 def predict():
