@@ -122,6 +122,22 @@ def check_file_integrity(file_path, expected_size):
         print(f"Error in file integrity check: {e}")
         return False
 
+def check_file_permissions(file_path):
+    if os.path.exists(file_path):
+        # الحصول على أذونات الملف باستخدام os.stat
+        file_permissions = oct(os.stat(file_path).st_mode)[-3:]
+        print(f"أذونات الملف: {file_permissions}")
+        
+        # التحقق من الأذونات المتاحة:
+        # قراءة الملف (r) = 4، كتابة الملف (w) = 2، تنفيذ الملف (x) = 1
+        permissions = os.access(file_path, os.R_OK | os.W_OK | os.X_OK)
+        if permissions:
+            print(f"العملية تمتلك الأذونات اللازمة للوصول إلى الملف.")
+        else:
+            print(f"العملية لا تمتلك الأذونات اللازمة للوصول إلى الملف.")
+    else:
+        print("الملف غير موجود!")
+
 # مسار الملف
 file_path = '/app/end3.keras'
 expected_size = 369520000  # الحجم المتوقع بالبايت (في حالة الحجم الفعلي من GitHub)
@@ -143,7 +159,8 @@ if check_file_integrity(file_path, expected_size):
 else:
     print("The file is invalid or inaccessible.")
 
-
+# التاكد ان العملية لها صلاحيات للملف
+check_file_permissions(file_path)
 
 categories = ['Apple___healthy', 'Apple___Black_rot']
 
