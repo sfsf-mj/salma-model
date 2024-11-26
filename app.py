@@ -11,6 +11,8 @@ app = Flask(__name__)
 #     return jsonify({"error": "النموذج غير موجود!"}), 500
 model = tf.keras.models.load_model("end3.keras")
 
+categories = ['Apple___healthy', 'Apple___Black_rot']
+
 # كود المعالجة السابقه مفروض يتعدل على حسب أخر نموذج (معلوووومه مهههههمه) لازم تتعدل
 def preprocess_image(image):
     image = image.resize((256, 256))  # تغيير حجم الصورة
