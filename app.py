@@ -12,10 +12,18 @@ MODEL_PATH = "end3.keras"
 IMG_SIZE = 256
 
 # تحقق من وجود النموذج أثناء بدء التشغيل
-if not os.path.exists(MODEL_PATH):
-    raise FileNotFoundError("النموذج غير موجود! تأكد من رفع الملف قبل تشغيل التطبيق.")
+# if not os.path.exists(MODEL_PATH):
+#     raise FileNotFoundError("النموذج غير موجود! تأكد من رفع الملف قبل تشغيل التطبيق.")
 
-model = tf.keras.models.load_model(MODEL_PATH)
+if not os.path.exists(MODEL_PATH):
+    raise FileNotFoundError(f"Model file not found at {MODEL_PATH}")
+
+
+try:
+    model = tf.keras.models.load_model(MODEL_PATH)
+except Exception as e:
+    print(f"Error loading model: {e}")
+    raise
 
 # قائمة الفئات
 categories = ['Apple___healthy', 'Apple___Black_rot']
