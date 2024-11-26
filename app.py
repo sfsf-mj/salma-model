@@ -130,9 +130,12 @@ def check_file_permissions(file_path):
         
         # التحقق من الأذونات المتاحة:
         # قراءة الملف (r) = 4، كتابة الملف (w) = 2، تنفيذ الملف (x) = 1
-        permissions = os.access(file_path, os.R_OK | os.W_OK | os.X_OK)
-        if permissions:
-            print(f"العملية تمتلك الأذونات اللازمة للوصول إلى الملف.")
+        if os.access(file_path, os.R_OK):
+            print(f"العملية تمتلك الأذونات اللازمة للقراءة الملف.")
+        elif os.access(file_path, os.W_OK):
+            print(f"العملية تمتلك الأذونات اللازمة للكتابة في الملف.")
+        elif os.access(file_path, os.X_OK):
+            print(f"العملية تمتلك الأذونات اللازمة لتنفيذ الملف.")
         else:
             print(f"العملية لا تمتلك الأذونات اللازمة للوصول إلى الملف.")
     else:
