@@ -41,7 +41,7 @@ print("ChatGPT ask: TensorFlow version:", tf.__version__)
 
 
 # import os
-print("ChatGPT say File exists:", os.path.exists("end3.keras"))
+print("ChatGPT say File exists:", os.path.exists("/app/end3.keras"))
 
 # تحميل النموذج
 # if not os.path.exists("end3.keras"):
