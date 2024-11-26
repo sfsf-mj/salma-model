@@ -6,6 +6,9 @@ import os
 
 app = Flask(__name__)
 
+import os
+print("ChatGPT say File exists:", os.path.exists("end3.keras"))
+
 # تحميل النموذج
 # if not os.path.exists("end3.keras"):
 #     return jsonify({"error": "النموذج غير موجود!"}), 500
