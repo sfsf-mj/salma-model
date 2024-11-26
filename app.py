@@ -134,7 +134,6 @@ get_file_info(model_path)
 permissions = get_file_permissions(file_path)
 if permissions is None:
     print("Error checking file permissions.")
-    return False
 else:
     print(f"File permissions: {oct(permissions)}")
 
