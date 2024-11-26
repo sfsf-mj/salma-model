@@ -4,6 +4,7 @@ from PIL import Image
 import numpy as np
 import os
 import zipfile
+import stat
 
 app = Flask(__name__)
 
@@ -78,6 +79,66 @@ def get_file_info(file_path):
         print(f"حجم الملف: {file_size} بايت")
     else:
         print(f"✘ الملف غير موجود: {file_path}")
+
+def get_file_permissions(file_path):
+    """
+    تعرض أذونات الملف.
+    """
+    try:
+        file_info = os.stat(file_path)
+        # استخدام stat لتحليل الأذونات
+        permissions = stat.S_IMODE(file_info.st_mode)
+        return permissions
+    except Exception as e:
+        print(f"Error checking permissions: {e}")
+        return None
+
+def check_file_integrity(file_path, expected_size):
+    """
+    تحقق من تكامل الملف بناءً على الحجم المتوقع.
+    """
+    try:
+        # تحقق من وجود الملف
+        if not os.path.exists(file_path):
+            print("File does not exist.")
+            return False
+
+        # تحقق من حجم الملف
+        actual_size = os.path.getsize(file_path)
+        if actual_size != expected_size:
+            print(f"File size mismatch: expected {expected_size} bytes, but got {actual_size} bytes.")
+            return False
+        
+        # تحقق من صلاحية الأذونات
+        permissions = get_file_permissions(file_path)
+        if permissions is None:
+            print("Error checking file permissions.")
+            return False
+        else:
+            print(f"File permissions: {oct(permissions)}")
+        
+        # تحقق من صحة النموذج باستخدام TensorFlow
+        try:
+            model = tf.keras.models.load_model(file_path)
+            print("Model loaded successfully.")
+            return True
+        except Exception as e:
+            print(f"Error loading model: {e}")
+            return False
+
+    except Exception as e:
+        print(f"Error in file integrity check: {e}")
+        return False
+
+# مسار الملف
+file_path = '/app/end3.keras'
+expected_size = 369520000  # الحجم المتوقع بالبايت (في حالة الحجم الفعلي من GitHub)
+
+# التحقق من تكامل الملف
+if check_file_integrity(file_path, expected_size):
+    print("The file is valid and accessible.")
+else:
+    print("The file is invalid or inaccessible.")
 
 result = check_model_file(model_path)
 print("tensorflow say: ",result)
